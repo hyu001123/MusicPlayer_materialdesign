@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="MusicPlayer"/>
+    <version value="1"/>
+
+    <list>
+        <mapping class="com.example.administrator.musicplayer_materialdesign.db.Music" />
+    </list>
+</litepal>
