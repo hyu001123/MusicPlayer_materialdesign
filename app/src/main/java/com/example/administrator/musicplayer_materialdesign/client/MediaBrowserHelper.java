@@ -34,6 +34,20 @@ public class MediaBrowserHelper {
         mMediaBrowserSubscriptionCallback=new MediaBrowserSubscriptionCallback();
     }
 
+
+    public void onConnected(MediaControllerCompat mMediaController) {
+    }
+
+
+    public void onChildrenLoaded(@NonNull String parentId,
+                                 @NonNull List<MediaBrowserCompat.MediaItem> children) {
+    }
+
+
+    public void onDisconnected() {
+    }
+
+
     public void onStart(){
         if(mMediaBrowser==null){
             mMediaBrowser=new MediaBrowserCompat(mContext,
@@ -103,6 +117,9 @@ public class MediaBrowserHelper {
 
 
     public MediaControllerCompat getMediaController(){
+        if(mMediaController==null){
+            throw new IllegalStateException("MediaController is null!");
+        }
         return mMediaController;
     }
 
@@ -166,16 +183,4 @@ public class MediaBrowserHelper {
         }
     }
 
-
-    public void onConnected(MediaControllerCompat mMediaController) {
-    }
-
-
-    public void onChildrenLoaded(@NonNull String parentId,
-                                  @NonNull List<MediaBrowserCompat.MediaItem> children) {
-    }
-
-
-    public void onDisconnected() {
-    }
 }

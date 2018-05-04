@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserServiceCompat;
+import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -123,8 +124,11 @@ public class MainActivity extends AppCompatActivity {
                     .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, totalTraCount)
                     .build();
             MediaSessionCompat.QueueItem item=new MediaSessionCompat.QueueItem(mediaMetaData.getDescription(),count++);
-            MediaBrowserCompat.MediaItem mMediaItem = new MediaBrowserCompat.MediaItem(mediaMetaData.getDescription(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
-            LogUtil.LogDebug("tag","mediaMetadata.Description===="+mediaMetaData.getDescription());
+            MediaMetadataCompat copy = new MediaMetadataCompat.Builder(mediaMetaData)
+                    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "MUSIC" + mediaMetaData.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID))
+                    .build();
+            MediaBrowserCompat.MediaItem mMediaItem = new MediaBrowserCompat.MediaItem(copy.getDescription(),MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
+            LogUtil.LogDebug("aaa","mediaMetadata.Description.mediaId===="+copy.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID));
             listMediaItem.add(mMediaItem);
             listMediaQueue.add(item);
         }

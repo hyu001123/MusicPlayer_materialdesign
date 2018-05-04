@@ -3,6 +3,7 @@ package com.example.administrator.musicplayer_materialdesign;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.session.MediaSessionManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -115,15 +116,20 @@ public class MediaBrowserFragment extends Fragment{
                             break;
                     }
                 }else if(currentPosition.equals(SONG_LIST)){
+                    StringBuilder sb = new StringBuilder();
                     String mp3Source = listData.get(position).getSourceUrl();
                     LogUtil.LogDebug("tag","media Id==="+mp3Source.hashCode());
-                   mMediaBrowserHelper.getMediaController().getTransportControls().playFromMediaId(String.valueOf(mp3Source.hashCode()),null);
+                    mMediaBrowserHelper.getMediaController().getTransportControls().prepare();
+                    StringBuilder mediaId = sb.append("MUSIC").append(listData.get(position).getSourceUrl().hashCode());
+                    LogUtil.LogDebug("tag","call-----mediaId====="+mediaId);
+                   mMediaBrowserHelper.getMediaController().getTransportControls().playFromMediaId(mediaId.toString(),null);
 
                 }
             }
         });
         mMediaBrowserHelper = new MediaBrowserConnection(getActivity());
         mMediaBrowserHelper.registerCallback(new MediaBrowserListener());
+
     }
 
 
@@ -301,12 +307,12 @@ public class MediaBrowserFragment extends Fragment{
 
         @Override
         public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children) {
-            //super.onChildrenLoaded(parentId, children);
-            MediaControllerCompat mMediaController = getMediaController();
+            super.onChildrenLoaded(parentId, children);
+           final MediaControllerCompat mMediaController = getMediaController();
 
-            for(MediaBrowserCompat.MediaItem mediaItem:children){
+            for(final MediaBrowserCompat.MediaItem mediaItem:children){
                 LogUtil.LogDebug("info","mediabrowser......fragment.......mediaItem====="+children);
-               mMediaController.addQueueItem(mediaItem.getDescription());
+              // mMediaController.addQueueItem(mediaItem.getDescription());
             }
             mMediaController.getTransportControls().prepare();
         }
@@ -324,6 +330,12 @@ public class MediaBrowserFragment extends Fragment{
                 return;
             }
             LogUtil.LogDebug("info","mediaBrowserfragment....metadata===="+metadata);
+        }
+
+        @Override
+        public void onQueueChanged(List<MediaSessionCompat.QueueItem> queue) {
+            super.onQueueChanged(queue);
+            LogUtil.LogDebug("queue",""+queue.iterator());
         }
     }
 }

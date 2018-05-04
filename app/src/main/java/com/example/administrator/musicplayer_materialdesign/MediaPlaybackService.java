@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.administrator.musicplayer_materialdesign.utils.LogUtil;
 
@@ -60,6 +62,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
         List<MediaSessionCompat.QueueItem> a = MainActivity.getListMediaQueue();
         LogUtil.LogDebug("aaa","playback.......service========="+a);
         mMediaSession.setQueue(a);
+
         //Get the session's metadata
 
     }
@@ -167,19 +170,20 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             // examine the passed parentMediaId to see which submenu we are at,
             //and put the children of that menu in the mediaItems list
         }
-        result.detach();
+        //result.detach();
         result.sendResult(MainActivity.getListMediaItem());
         LogUtil.LogDebug("info","playback...service...======="+result);
     }
 
 
-    class MediaSessionCallback extends MediaSessionCompat.Callback{
+    class  MediaSessionCallback extends MediaSessionCompat.Callback{
         private final List<MediaSessionCompat.QueueItem> mPlaylist=new ArrayList<>();
         private int mQueueIndex=-1;
         private MediaMetadataCompat mPrepareMedia;
         @Override
         public void onAddQueueItem(MediaDescriptionCompat description) {
             mPlaylist.add(new MediaSessionCompat.QueueItem(description,description.hashCode()));
+            LogUtil.LogDebug("aaa","description===="+description);
             mQueueIndex=(mQueueIndex==-1)? 0:mQueueIndex;
             mMediaSession.setQueue(mPlaylist);
         }
@@ -198,6 +202,11 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat {
             }
             final String mediaId=mPlaylist.get(mQueueIndex).getDescription().getMediaId();
 
+        }
+
+        @Override
+        public void onPlayFromUri(Uri uri, Bundle extras) {
+            super.onPlayFromUri(uri, extras);
         }
     }
 }
